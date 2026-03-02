@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7056805385040141083}
   - component: {fileID: 1130885972714487026}
+  - component: {fileID: -6123332273963444448}
   m_Layer: 0
   m_Name: Start_Pipe
   m_TagString: Untagged
@@ -54,8 +55,24 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10.185017, y: 8.079213, z: 10.131489}
-  m_Center: {x: 0.10142422, y: 2.8741126, z: -0.12730408}
+  m_Size: {x: 10.185017, y: 3.513513, z: 10.131489}
+  m_Center: {x: 0.10142422, y: 0.5912626, z: -0.12730408}
+--- !u!114 &-6123332273963444448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705629947903302248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dce0a9bc7eb71248bd880d8e6f1790d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PipeTile
+  type: 1
+  rotatable: 1
+  open: 00000000
+  gridPos: {x: 0, y: 0}
 --- !u!1001 &1028947895120421252
 PrefabInstance:
   m_ObjectHideFlags: 0
