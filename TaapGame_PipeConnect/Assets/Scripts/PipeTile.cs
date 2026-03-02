@@ -26,6 +26,7 @@ public class PipeTile : MonoBehaviour
     {
         SetupConnections();
 
+        // Specific code to allow for pipe material change without having to compare instances
         var shared = pipeRenderer.sharedMaterials;
 
         for (int i = 0; i < shared.Length; i++)

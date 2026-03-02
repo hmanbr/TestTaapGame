@@ -35,6 +35,8 @@ public class GridManager : MonoBehaviour
         new Vector2Int(-1, 0)
     };
 
+    private bool hasWon = false;
+
     void Start()
     {
         if (unityGrid == null)
@@ -52,38 +54,84 @@ public class GridManager : MonoBehaviour
         PropagateWater(start);
     }
 
+    // Flowing water to neighbouring pipes (BFS Flood Problem)
     void PropagateWater(PipeTile start)
     {
-        // Reset all water first
+        // STEP 1: Clear previous simulation
+        // Reset all pipes so water recalculation is always deterministic
         foreach (var pipe in gridData)
             if (pipe != null)
                 pipe.SetWater(false);
 
+        // STEP 2: BFS queue
+        // Breadth-First Search so water spread
         var queue = new Queue<PipeTile>();
 
+        // STEP 3: Start from "start_pipe"
         start.SetWater(true);
         queue.Enqueue(start);
 
+        // STEP 4: Fill pipe with water
+        // Continue spreading water until no more valid pipes are reachable
         while (queue.Count > 0)
         {
             PipeTile current = queue.Dequeue();
 
+            // STEP 5: Check all 4 directions (Up, Right, Down, Left)
             for (int dir = 0; dir < 4; dir++)
             {
+                // If this pipe is closed in this direction, skip
                 if (!current.open[dir]) continue;
 
+                // Get neighbor in that direction
                 PipeTile neighbor = GetNeighbor(current, dir);
+
+                // Skip outside grid and empty tile
                 if (neighbor == null) continue;
+
+                // Skip if water already filled (prevents infinite loops)
                 if (neighbor.hasWater) continue;
 
-                // Check if neighbor connects back
+                // STEP 6: Connection validation
+                // Pipes must connect BOTH ways: current -> neighbor AND neighbor -> current
                 if (neighbor.open[OppositeDirection(dir)])
                 {
+                    // Valid connection: fill neighbor with water
                     neighbor.SetWater(true);
+
+                    // Add neighbor to queue so it can continue spreading
                     queue.Enqueue(neighbor);
                 }
             }
         }
+
+        // After water fill finishes, check win condition.
+        CheckWinCondition();
+    }
+
+    void CheckWinCondition()
+    {
+        PipeTile end = FindPipe(PipeType.End);
+        if (end == null) return;
+
+        if (end.hasWater)
+        {
+            Debug.Log("YOU WIN!");
+            OnWin();
+        }
+    }
+
+    void OnWin()
+    {
+        if (hasWon) return; // prevent spam
+        hasWon = true;
+
+        Debug.Log("Puzzle solved! YAAAAAAAAAAY");
+
+        // Play sound
+        // Show UI
+        // Lock rotation
+        // Load next level
     }
 
     public void RecalculateWater()
