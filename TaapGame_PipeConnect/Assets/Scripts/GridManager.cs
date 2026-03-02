@@ -26,6 +26,8 @@ public class GridManager : MonoBehaviour
 
     private PipeTile[,] gridData;
 
+    [SerializeField] private PipeLevelDataSO levelDataSO;
+
     // Direction helpers (Up, Right, Down, Left)
     private Vector2Int[] offsets =
     {
@@ -42,7 +44,8 @@ public class GridManager : MonoBehaviour
         if (unityGrid == null)
             unityGrid = GetComponent<Grid>();
 
-        SpawnWinableGrid();
+        //SpawnTestWinableGrid();
+        SpawnFromLevelData();
         StartWaterFlow();
     }
 
@@ -111,19 +114,36 @@ public class GridManager : MonoBehaviour
 
     void CheckWinCondition()
     {
-        PipeTile end = FindPipe(PipeType.End);
-        if (end == null) return;
+        if (hasWon) return;
 
-        if (end.hasWater)
+        bool foundEnd = false;
+
+        foreach (var pipe in gridData)
         {
-            Debug.Log("YOU WIN!");
-            OnWin();
+            if (pipe == null) continue;
+
+            if (pipe.type == PipeType.End)
+            {
+                foundEnd = true;
+
+                if (!pipe.hasWater)
+                    return; // One end not filled = not win
+            }
         }
+
+        // No end pipes safety check
+        if (!foundEnd)
+        {
+            Debug.LogWarning("No end pipes in level!");
+            return;
+        }
+
+        OnWin();
     }
 
     void OnWin()
     {
-        if (hasWon) return; // prevent spam
+        if (hasWon) return; // prevent win spam
         hasWon = true;
 
         Debug.Log("Puzzle solved! YAAAAAAAAAAY");
@@ -168,9 +188,70 @@ public class GridManager : MonoBehaviour
         }
         return null;
     }
+    GameObject GetPrefabFromType(PipeType type)
+    {
+        switch (type)
+        {
+            case PipeType.Start:
+                return startPrefab;
+            case PipeType.End: 
+                return endPrefab;
+            case PipeType.Straight: 
+                return straightPrefab;
+            case PipeType.Bend90:
+                return bendPrefab;
+            case PipeType.TShape: 
+                return tShapePrefab;
+            case PipeType.Cross: 
+                return crossPrefab;
+            default: 
+                return emptyPrefab;
+        }
+    }
 
+    void SpawnFromLevelData()
+    {
+        if (levelDataSO == null)
+        {
+            Debug.LogError("No level assigned!");
+            return;
+        }
 
-    void SpawnWinableGrid()
+        width = levelDataSO.width;
+        depth = levelDataSO.height;
+
+        gridData = new PipeTile[width, depth];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < depth; z++)
+            {
+                PipeData data = levelDataSO.Get(x, z);
+
+                GameObject prefab = GetPrefabFromType(data.type);
+
+                Vector3 worldPos = unityGrid != null
+                    ? unityGrid.GetCellCenterWorld(new Vector3Int(x, 0, z))
+                    : new Vector3(x, 0, z);
+
+                GameObject obj = Instantiate(prefab, worldPos, Quaternion.identity, transform);
+
+                PipeTile pipe = obj.GetComponent<PipeTile>();
+                pipe.gridPos = new Vector2Int(x, z);
+
+                // Apply rotation
+                for (int i = 0; i < data.rotation; i++)
+                    pipe.Rotate();
+
+                // Lock pipe (TEMP DISABLE)
+                //pipe.SetRotatable(data.rotatable);
+
+                gridData[x, z] = pipe;
+            }
+        }
+    }
+
+    void SpawnTestWinableGrid()
     {
         gridData = new PipeTile[width, depth];
 
