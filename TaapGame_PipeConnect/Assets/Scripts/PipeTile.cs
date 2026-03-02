@@ -11,16 +11,39 @@ public class PipeTile : MonoBehaviour
     // Which directions are open (Up, Right, Down, Left)
     public bool[] open = new bool[4];
 
-    public Vector2Int gridPos; // assigned later
+    public Vector2Int gridPos; // assigned later when generate grid
+
+    [Header("Water")]
+    public bool hasWater = false;
+    public Material pipeMaterial;
+    public Material pipeWaterMaterial;
+    private int pipeMatIndex = -1;
+
+    [SerializeField] private MeshRenderer pipeRenderer = null;
+
 
     void Awake()
     {
         SetupConnections();
+
+        var shared = pipeRenderer.sharedMaterials;
+
+        for (int i = 0; i < shared.Length; i++)
+        {
+            if (shared[i].name.Contains(pipeMaterial.name))
+            {
+                pipeMatIndex = i;
+                break;
+            }
+        }
+
+        if (pipeMatIndex == -1 && type != PipeType.Empty)
+            Debug.LogError("Pipe material not found on " + name);
     }
 
     public void Rotate()
     {
-        if (!rotatable) return; // STOP if locked
+        if (!rotatable) return; // stop if locked
 
         transform.Rotate(0, 90, 0);
 
@@ -30,6 +53,21 @@ public class PipeTile : MonoBehaviour
         open[2] = open[1];
         open[1] = open[0];
         open[0] = temp;
+    }
+
+    public void SetWater(bool state)
+    {
+        if (pipeRenderer == null || type == PipeType.Empty) return;
+
+        hasWater = state;
+
+        if (pipeRenderer == null || pipeMatIndex < 0) return;
+
+        var mats = pipeRenderer.materials; // runtime instance array
+
+        mats[pipeMatIndex] = state ? pipeWaterMaterial : pipeMaterial;
+
+        pipeRenderer.materials = mats;
     }
 
     void SetupConnections()

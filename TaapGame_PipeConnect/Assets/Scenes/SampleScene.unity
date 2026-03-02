@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cea498d8059a8c4ca68590b665b6253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
+  gridManager: {fileID: 804869200}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +176,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -504,7 +505,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc42b89536db0e41864e5ab3b6da9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridPrefabSpawner
-  grid: {fileID: 804869201}
+  startPrefab: {fileID: 705629947903302248, guid: 43ed4f21f207e504cbca3c3d71a939d2, type: 3}
+  endPrefab: {fileID: 699726943122832054, guid: 20fb33d69f6c5164fa5836840679d3c9, type: 3}
+  straightPrefab: {fileID: 2473169258959023162, guid: 639a221a081b8d24f951eab412e837c4, type: 3}
+  bendPrefab: {fileID: 5857137765018898056, guid: bf02aa8192699f24493c1a22757d8fa2, type: 3}
+  tShapePrefab: {fileID: 634376745915364011, guid: 37eb7cc8b3f0bbc4b8ffa6ce707c36a5, type: 3}
+  crossPrefab: {fileID: 3926573183250138969, guid: 2e240e1eaeb20ba4ba0a2bdb862e75c7, type: 3}
+  fixedStraightPrefab: {fileID: 2758674600617516009, guid: a27f121a36928004e96d9794f0f3f21d, type: 3}
+  fixedBendPrefab: {fileID: 5857137765018898056, guid: 6a813740e7c80564b98c7909ea14049a, type: 3}
+  fixedTShapePrefab: {fileID: 9208536468339944399, guid: de75ebf256f74ca41ac22c1d889b1d56, type: 3}
+  emptyPrefab: {fileID: 8182657468022705199, guid: a6dab4b513e2c164fae5f473097e4661, type: 3}
+  unityGrid: {fileID: 804869201}
+  width: 5
+  depth: 5
   prefabs:
   - {fileID: 5857137765018898056, guid: bf02aa8192699f24493c1a22757d8fa2, type: 3}
   - {fileID: 699726943122832054, guid: 20fb33d69f6c5164fa5836840679d3c9, type: 3}
@@ -516,8 +529,6 @@ MonoBehaviour:
   - {fileID: 705629947903302248, guid: 43ed4f21f207e504cbca3c3d71a939d2, type: 3}
   - {fileID: 2473169258959023162, guid: 639a221a081b8d24f951eab412e837c4, type: 3}
   - {fileID: 634376745915364011, guid: 37eb7cc8b3f0bbc4b8ffa6ce707c36a5, type: 3}
-  width: 5
-  depth: 5
 --- !u!156049354 &804869201
 Grid:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ public class InputManager : MonoBehaviour
 {
     private Camera camera;
 
+    [SerializeField] private GridManager gridManager;
+
     void Awake()
     {
         camera = Camera.main;
@@ -26,10 +28,11 @@ public class InputManager : MonoBehaviour
 
                 if (pipe != null)
                 {
-                    Debug.Log("Clicked PipeTile: " + clicked.name);
+                    //Debug.Log("Clicked PipeTile: " + clicked.name);
 
                     pipe.Rotate();
-                    pipe.DebugOpenDirections();
+                    //pipe.DebugOpenDirections();
+                    gridManager.RecalculateWater();
                 }
                 else
                 {

@@ -1,38 +1,204 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static GameEnum;
 
 public class GridManager : MonoBehaviour
 {
-    public Grid grid;
-    public List<GameObject> prefabs;
+    [Header("Pipe Prefabs")]
+    [SerializeField] private GameObject startPrefab;
+    [SerializeField] private GameObject endPrefab;
+    [SerializeField] private GameObject straightPrefab;
+    [SerializeField] private GameObject bendPrefab;
+    [SerializeField] private GameObject tShapePrefab;
+    [SerializeField] private GameObject crossPrefab;
+    [SerializeField] private GameObject fixedStraightPrefab;
+    [SerializeField] private GameObject fixedBendPrefab;
+    [SerializeField] private GameObject fixedTShapePrefab;
+    [SerializeField] private GameObject emptyPrefab;
 
-    public int width = 5;
-    public int depth = 5;
+    [Header("Grid Settings")]
+    [SerializeField] private Grid unityGrid;                  // Optional Unity Grid
+    [SerializeField] private int width = 5;
+    [SerializeField] private int depth = 5;
+
+    [Header("Pipe Prefabs")]
+    [SerializeField] private List<GameObject> prefabs;
+
+    private PipeTile[,] gridData;
+
+    // Direction helpers (Up, Right, Down, Left)
+    private Vector2Int[] offsets =
+    {
+        new Vector2Int(0, 1),
+        new Vector2Int(1, 0),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, 0)
+    };
 
     void Start()
     {
-        if (grid == null)
-            grid = GetComponent<Grid>();
+        if (unityGrid == null)
+            unityGrid = GetComponent<Grid>();
 
-        SpawnGrid();
+        SpawnWinableGrid();
+        StartWaterFlow();
     }
 
-    void SpawnGrid()
+    void StartWaterFlow()
     {
+        PipeTile start = FindPipe(PipeType.Start);
+        if (start == null) return;
+
+        PropagateWater(start);
+    }
+
+    void PropagateWater(PipeTile start)
+    {
+        // Reset all water first
+        foreach (var pipe in gridData)
+            if (pipe != null)
+                pipe.SetWater(false);
+
+        var queue = new Queue<PipeTile>();
+
+        start.SetWater(true);
+        queue.Enqueue(start);
+
+        while (queue.Count > 0)
+        {
+            PipeTile current = queue.Dequeue();
+
+            for (int dir = 0; dir < 4; dir++)
+            {
+                if (!current.open[dir]) continue;
+
+                PipeTile neighbor = GetNeighbor(current, dir);
+                if (neighbor == null) continue;
+                if (neighbor.hasWater) continue;
+
+                // Check if neighbor connects back
+                if (neighbor.open[OppositeDirection(dir)])
+                {
+                    neighbor.SetWater(true);
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+    }
+
+    public void RecalculateWater()
+    {
+        PipeTile start = FindPipe(PipeType.Start);
+        if (start == null) return;
+
+        PropagateWater(start);
+    }
+
+    //Helpers
+    int OppositeDirection(int dir)
+    {
+        return (dir + 2) % 4;
+    }
+
+    PipeTile GetNeighbor(PipeTile pipe, int dir)
+    {
+        Vector2Int next = pipe.gridPos + offsets[dir];
+
+        if (next.x < 0 || next.x >= width || next.y < 0 || next.y >= depth)
+            return null;
+
+        return gridData[next.x, next.y];
+    }
+
+    // Find pipe by type
+    PipeTile FindPipe(PipeType type)
+    {
+        foreach (var pipe in gridData)
+        {
+            if (pipe != null && pipe.type == type)
+                return pipe;
+        }
+        return null;
+    }
+
+
+    void SpawnWinableGrid()
+    {
+        gridData = new PipeTile[width, depth];
+
+        int pathRow = depth / 2; // middle row
+
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < depth; z++)
             {
-                // Y = 0 (important!)
-                Vector3Int cellPos = new Vector3Int(x, 0, z);
+                Vector3 worldPos;
 
-                Vector3 worldPos = grid.GetCellCenterWorld(cellPos);
+                if (unityGrid != null)
+                {
+                    Vector3Int cell = new Vector3Int(x, 0, z);
+                    worldPos = unityGrid.GetCellCenterWorld(cell);
+                }
+                else
+                {
+                    worldPos = new Vector3(x, 0, z);
+                }
 
-                GameObject prefab =
-                    prefabs[Random.Range(0, prefabs.Count)];
+                GameObject prefabToSpawn;
 
-                Instantiate(prefab, worldPos, Quaternion.identity, transform);
+                // ===== PATH ROW =====
+                if (z == pathRow)
+                {
+                    if (x == 0)
+                        prefabToSpawn = startPrefab;
+                    else if (x == width - 1)
+                        prefabToSpawn = endPrefab;
+                    else
+                        prefabToSpawn = straightPrefab;
+                }
+                else
+                {
+                    prefabToSpawn = emptyPrefab;
+                }
+
+                GameObject obj = Instantiate(prefabToSpawn, worldPos, Quaternion.identity, transform);
+                PipeTile pipe = obj.GetComponent<PipeTile>();
+
+                pipe.gridPos = new Vector2Int(x, z);
+                gridData[x, z] = pipe;
             }
         }
     }
+
+    void SpawnGrid()
+    {
+        gridData = new PipeTile[width, depth];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < depth; z++)
+            {
+                Vector3 worldPos;
+
+                if (unityGrid != null)
+                {
+                    Vector3Int cell = new Vector3Int(x, 0, z);
+                    worldPos = unityGrid.GetCellCenterWorld(cell);
+                }
+                else
+                {
+                    worldPos = new Vector3(x, 0, z);
+                }
+
+                GameObject prefab = prefabs[Random.Range(0, prefabs.Count)];
+                GameObject obj = Instantiate(prefab, worldPos, Quaternion.identity, transform);
+
+                PipeTile pipe = obj.GetComponent<PipeTile>();
+                pipe.gridPos = new Vector2Int(x, z);
+
+                gridData[x, z] = pipe;
+            }
+        }
+    }
+
 }

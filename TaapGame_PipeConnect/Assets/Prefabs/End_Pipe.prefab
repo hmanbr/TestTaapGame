@@ -73,6 +73,10 @@ MonoBehaviour:
   rotatable: 1
   open: 00000000
   gridPos: {x: 0, y: 0}
+  hasWater: 0
+  pipeMaterial: {fileID: 2100000, guid: d3e6dc004c812a84e83c0cdef3e85fb9, type: 2}
+  pipeWaterMaterial: {fileID: 2100000, guid: 903b53b9e15e27343874c222f8be82d7, type: 2}
+  pipeRenderer: {fileID: 3806454139972798326}
 --- !u!1001 &2245977993973299678
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,7 +209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 72343413fe0153848b401bb08faad089, type: 3}
       propertyPath: m_Name
-      value: land1
+      value: Land
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -265,9 +269,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 4a19161f758a35c498b7b9d273f8e011, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 880774007180850119, guid: 4a19161f758a35c498b7b9d273f8e011, type: 3}
+    - target: {fileID: -7511558181221131132, guid: 4a19161f758a35c498b7b9d273f8e011, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3e6dc004c812a84e83c0cdef3e85fb9, type: 2}
     - target: {fileID: 919132149155446097, guid: 4a19161f758a35c498b7b9d273f8e011, type: 3}
       propertyPath: m_Name
-      value: pipe2
+      value: Pipe
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -277,5 +289,10 @@ PrefabInstance:
 --- !u!4 &2636876290149006361 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4a19161f758a35c498b7b9d273f8e011, type: 3}
+  m_PrefabInstance: {fileID: 2527267602716580850}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3806454139972798326 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 4a19161f758a35c498b7b9d273f8e011, type: 3}
   m_PrefabInstance: {fileID: 2527267602716580850}
   m_PrefabAsset: {fileID: 0}

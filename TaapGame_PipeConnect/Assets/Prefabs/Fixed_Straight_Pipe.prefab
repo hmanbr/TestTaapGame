@@ -73,6 +73,10 @@ MonoBehaviour:
   rotatable: 0
   open: 00000000
   gridPos: {x: 0, y: 0}
+  hasWater: 0
+  pipeMaterial: {fileID: 2100000, guid: d3e6dc004c812a84e83c0cdef3e85fb9, type: 2}
+  pipeWaterMaterial: {fileID: 2100000, guid: 903b53b9e15e27343874c222f8be82d7, type: 2}
+  pipeRenderer: {fileID: 5638435317659259930}
 --- !u!1001 &106976860465585293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123,7 +127,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 59666c96b6b988e4bb37c097dd48061c, type: 3}
       propertyPath: m_Name
-      value: land2
+      value: Land
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -257,15 +261,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: f9d8b10d9146aaa438ea6968c28e3480, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d3e6dc004c812a84e83c0cdef3e85fb9, type: 2}
     - target: {fileID: 919132149155446097, guid: f9d8b10d9146aaa438ea6968c28e3480, type: 3}
       propertyPath: m_Name
-      value: pipe1
+      value: Pipe
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9d8b10d9146aaa438ea6968c28e3480, type: 3}
+--- !u!23 &5638435317659259930 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: f9d8b10d9146aaa438ea6968c28e3480, type: 3}
+  m_PrefabInstance: {fileID: 6484667439815215262}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6806227461010304885 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f9d8b10d9146aaa438ea6968c28e3480, type: 3}
