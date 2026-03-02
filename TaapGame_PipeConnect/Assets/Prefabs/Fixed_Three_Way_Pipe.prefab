@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dce0a9bc7eb71248bd880d8e6f1790d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PipeTile
-  type: 5
+  type: 9
   rotatable: 0
   open: 00000000
   gridPos: {x: 0, y: 0}

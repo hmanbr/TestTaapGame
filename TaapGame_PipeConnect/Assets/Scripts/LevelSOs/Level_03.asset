@@ -10,38 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab9be6232b55d214f91ab2f20a158a33, type: 3}
-  m_Name: Level_01
+  m_Name: Level_03
   m_EditorClassIdentifier: Assembly-CSharp::PipeLevelDataSO
-  width: 3
-  height: 3
+  column: 3
+  row: 4
   rows:
   - columns:
-    - type: 0
-      rotation: 0
-      rotatable: 0
-    - type: 2
-      rotation: 0
-      rotatable: 1
     - type: 4
       rotation: 0
-      rotatable: 1
+    - type: 2
+      rotation: 0
+    - type: 0
+      rotation: 0
   - columns:
+    - type: 9
+      rotation: 2
+    - type: 4
+      rotation: 2
     - type: 0
       rotation: 0
-      rotatable: 0
-    - type: 0
-      rotation: 0
-      rotatable: 0
-    - type: 3
-      rotation: 0
-      rotatable: 1
   - columns:
     - type: 1
       rotation: 0
-      rotatable: 1
     - type: 3
       rotation: 0
-      rotatable: 1
+    - type: 2
+      rotation: 0
+  - columns:
+    - type: 0
+      rotation: 0
     - type: 4
       rotation: 0
-      rotatable: 1
+    - type: 4
+      rotation: 0
+  moveLimit: 20

@@ -194,17 +194,23 @@ public class GridManager : MonoBehaviour
         {
             case PipeType.Start:
                 return startPrefab;
-            case PipeType.End: 
+            case PipeType.End:
                 return endPrefab;
-            case PipeType.Straight: 
+            case PipeType.Straight:
                 return straightPrefab;
             case PipeType.Bend90:
                 return bendPrefab;
-            case PipeType.TShape: 
+            case PipeType.TShape:
                 return tShapePrefab;
-            case PipeType.Cross: 
+            case PipeType.Cross:
                 return crossPrefab;
-            default: 
+            case PipeType.FixedStraight:
+                return fixedStraightPrefab;
+            case PipeType.FixedBend90:
+                return fixedBendPrefab;
+            case PipeType.FixedTShape:
+                return fixedTShapePrefab;
+            default:
                 return emptyPrefab;
         }
     }
@@ -217,8 +223,8 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        width = levelDataSO.width;
-        depth = levelDataSO.height;
+        width = levelDataSO.column;
+        depth = levelDataSO.row;
 
         gridData = new PipeTile[width, depth];
 
@@ -240,8 +246,7 @@ public class GridManager : MonoBehaviour
                 pipe.gridPos = new Vector2Int(x, z);
 
                 // Apply rotation
-                for (int i = 0; i < data.rotation; i++)
-                    pipe.Rotate();
+                pipe.ForceRotate(data.rotation);
 
                 // Lock pipe (TEMP DISABLE)
                 //pipe.SetRotatable(data.rotatable);

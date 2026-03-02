@@ -44,8 +44,13 @@ public class PipeTile : MonoBehaviour
 
     public void Rotate()
     {
-        if (!rotatable) return; // stop if locked
+        if (!IsRotatable()) return;
 
+        RotateInternal();
+    }
+
+    private void RotateInternal()
+    {
         transform.Rotate(0, 90, 0);
 
         // rotate connection data
@@ -54,6 +59,13 @@ public class PipeTile : MonoBehaviour
         open[2] = open[1];
         open[1] = open[0];
         open[0] = temp;
+    }
+
+    // Rotate pipe for level generator (allow fixed pipe bypass)
+    public void ForceRotate(int times) 
+    {
+        for (int i = 0; i < times; i++)
+            RotateInternal();
     }
 
     public void SetWater(bool state)
@@ -70,6 +82,19 @@ public class PipeTile : MonoBehaviour
 
         pipeRenderer.materials = mats;
     }
+    public bool IsRotatable()
+    {
+        switch (type)
+        {
+            case PipeType.FixedStraight:
+            case PipeType.FixedBend90:
+            case PipeType.FixedTShape:
+            case PipeType.Empty:
+                return false;
+            default:
+                return true;
+        }
+    }
 
     void SetupConnections()
     {
@@ -78,16 +103,19 @@ public class PipeTile : MonoBehaviour
         switch (type)
         {
             case PipeType.Straight:
+            case PipeType.FixedStraight:
                 open[(int)Dir.Up] = true;
                 open[(int)Dir.Down] = true;
                 break;
 
             case PipeType.Bend90:
+            case PipeType.FixedBend90:
                 open[(int)Dir.Up] = true;
                 open[(int)Dir.Left] = true;
                 break;
 
             case PipeType.TShape:
+            case PipeType.FixedTShape:
                 open[(int)Dir.Up] = true;
                 open[(int)Dir.Left] = true;
                 open[(int)Dir.Down] = true;

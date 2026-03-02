@@ -10,7 +10,10 @@ public class GameEnum
         Straight,
         Bend90,
         TShape,
-        Cross
+        Cross,
+        FixedStraight,
+        FixedBend90,
+        FixedTShape,
     }
 
     public enum Dir { Up, Right, Down, Left }
