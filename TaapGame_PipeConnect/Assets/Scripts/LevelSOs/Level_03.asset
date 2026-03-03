@@ -43,4 +43,4 @@ MonoBehaviour:
       rotation: 0
     - type: 4
       rotation: 0
-  moveLimit: 20
+  moveLimit: 15

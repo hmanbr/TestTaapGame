@@ -14,29 +14,24 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        // Left mouse click (Unity 6 Input Manager)
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        //Unity 6 Input Manager
+        if (Pointer.current == null) return;
+
+        if (Pointer.current.press.wasPressedThisFrame)
         {
-            Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Vector2 screenPos = Pointer.current.position.ReadValue();
+
+            Ray ray = camera.ScreenPointToRay(screenPos);
 
             if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
-                GameObject clicked = hit.collider.gameObject;
-
                 // Check for PipeTile component
-                PipeTile pipe = clicked.GetComponent<PipeTile>();
+                PipeTile pipe = hit.collider.GetComponent<PipeTile>();
 
                 if (pipe != null)
                 {
-                    //Debug.Log("Clicked PipeTile: " + clicked.name);
-
-                    pipe.Rotate();
+                    gridManager.TryRotatePipe(pipe);
                     //pipe.DebugOpenDirections();
-                    gridManager.RecalculateWater();
-                }
-                else
-                {
-                    Debug.Log("Clicked non-pipe object: " + clicked.name);
                 }
             }
         }

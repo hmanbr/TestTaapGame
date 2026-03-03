@@ -1,9 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static GameEnum;
 
 public class GridManager : MonoBehaviour
 {
+    public event Action OnWinEvent;
+    public event Action OnLoseEvent;
+    public event Action<int> OnMovesChanged;
+
     [Header("Pipe Prefabs")]
     [SerializeField] private GameObject startPrefab;
     [SerializeField] private GameObject endPrefab;
@@ -38,6 +43,8 @@ public class GridManager : MonoBehaviour
     };
 
     private bool hasWon = false;
+    private bool hasLost = false;
+    private int remainingMoves;
 
     void Start()
     {
@@ -63,6 +70,22 @@ public class GridManager : MonoBehaviour
         if (start == null) return;
 
         PropagateWater(start);
+    }
+
+    public void TryRotatePipe(PipeTile pipe)
+    {
+        if (hasWon || hasLost) return;
+        if (remainingMoves <= 0) return;
+        if (!pipe.IsRotatable()) return;
+
+        pipe.Rotate();
+
+        remainingMoves--;
+
+        OnMovesChanged?.Invoke(remainingMoves);   // notify UI
+
+        RecalculateWater();
+        CheckLoseCondition();
     }
 
     // Flowing water to neighbouring pipes (BFS Flood Problem)
@@ -119,6 +142,16 @@ public class GridManager : MonoBehaviour
         // After water fill finishes, check win condition.
         CheckWinCondition();
     }
+    void CheckLoseCondition()
+    {
+        if (remainingMoves <= 0 && !hasWon)
+        {
+            hasLost = true;
+            Debug.Log("OUT OF MOVES - YOU LOSE");
+
+            OnLoseEvent?.Invoke();
+        }
+    }
 
     void CheckWinCondition()
     {
@@ -156,10 +189,7 @@ public class GridManager : MonoBehaviour
 
         Debug.Log("Puzzle solved! YAAAAAAAAAAY");
 
-        // Play sound
-        // Show UI
-        // Lock rotation
-        // Load next level
+        OnWinEvent?.Invoke();
     }
 
     public void RecalculateWater()
@@ -230,6 +260,7 @@ public class GridManager : MonoBehaviour
             Debug.LogError("No level assigned!");
             return;
         }
+        remainingMoves = levelDataSO.moveLimit;
 
         width = levelDataSO.column;
         depth = levelDataSO.row;
@@ -262,6 +293,7 @@ public class GridManager : MonoBehaviour
                 gridData[x, z] = pipe;
             }
         }
+        OnMovesChanged?.Invoke(remainingMoves);
         AlignCameraToMiddle();
     }
 
@@ -358,7 +390,7 @@ public class GridManager : MonoBehaviour
                     worldPos = new Vector3(x, 0, z);
                 }
 
-                GameObject prefab = prefabs[Random.Range(0, prefabs.Count)];
+                GameObject prefab = prefabs[UnityEngine.Random.Range(0, prefabs.Count)];
                 GameObject obj = Instantiate(prefab, worldPos, Quaternion.identity, transform);
 
                 PipeTile pipe = obj.GetComponent<PipeTile>();

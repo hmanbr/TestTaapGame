@@ -1,0 +1,2 @@
+C:\Unity\Unity Projects\TestTaapGame\TaapGame_PipeConnect\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+C:\Unity\Unity Projects\TestTaapGame\TaapGame_PipeConnect\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt
