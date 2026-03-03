@@ -26,7 +26,7 @@ public class GridManager : MonoBehaviour
 
     private PipeTile[,] gridData;
 
-    [SerializeField] private PipeLevelDataSO levelDataSO;
+    private PipeLevelDataSO levelDataSO;
 
     // Direction helpers (Up, Right, Down, Left)
     private Vector2Int[] offsets =
@@ -43,6 +43,14 @@ public class GridManager : MonoBehaviour
     {
         if (unityGrid == null)
             unityGrid = GetComponent<Grid>();
+
+        levelDataSO = LevelLoader.SelectedLevel;
+
+        if (levelDataSO == null)
+        {
+            Debug.LogError("No level selected!");
+            return;
+        }
 
         //SpawnTestWinableGrid();
         SpawnFromLevelData();
@@ -254,6 +262,32 @@ public class GridManager : MonoBehaviour
                 gridData[x, z] = pipe;
             }
         }
+        AlignCameraToMiddle();
+    }
+
+    void AlignCameraToMiddle()
+    {
+        Camera cam = Camera.main;
+
+        if (unityGrid == null)
+        {
+            Debug.LogWarning("No Grid assigned!");
+            return;
+        }
+
+        // Get bottom-left cell center
+        Vector3 bottomLeft = unityGrid.GetCellCenterWorld(new Vector3Int(0, 0, 0));
+
+        // Get top-right cell center
+        Vector3 topRight = unityGrid.GetCellCenterWorld(new Vector3Int(width - 1, 0, depth - 1));
+
+        // True center of grid
+        Vector3 center = (bottomLeft + topRight) / 2f;
+
+        Vector3 camPos = cam.transform.position;
+        camPos.x = center.x;
+
+        cam.transform.position = camPos;
     }
 
     void SpawnTestWinableGrid()
